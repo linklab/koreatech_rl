@@ -42,7 +42,7 @@ def frozen_lake_6() -> gym.Env:
     return env
 
 
-def run(env: gym.Env) -> None:
+def run(env: gym.Env):
     # This sets the initial state at S, our starting point
     # We can render the environment to see where we are on the 4x4 frozenlake gridworld
     observation, info = env.reset()

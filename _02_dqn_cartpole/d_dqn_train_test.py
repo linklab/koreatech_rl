@@ -26,13 +26,13 @@ class ReplayBuffer:
     def size(self) -> int:
         return len(self.buffer)
 
-    def append(self, transition: Transition) -> None:
+    def append(self, transition: Transition):
         self.buffer.append(transition)
 
     def pop(self) -> Transition:
         return self.buffer.pop()
 
-    def clear(self) -> None:
+    def clear(self):
         self.buffer.clear()
 
     def sample(self, batch_size: int) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]:
@@ -107,7 +107,7 @@ class DqnTrainer:
         epsilon = min(self.config["epsilon_start"] - fraction * epsilon_span, self.config["epsilon_start"])
         return epsilon
 
-    def train_loop(self) -> None:
+    def train_loop(self):
         loss = 0.0
 
         self.total_train_start_time = time.time()
@@ -241,7 +241,7 @@ class DqnTrainer:
 
         return loss.item()
 
-    def model_save(self, validation_episode_reward_avg: float) -> None:
+    def model_save(self, validation_episode_reward_avg: float):
         filename = "dqn_{0}_{1:4.1f}_{2}.pth".format(self.config["env_name"], validation_episode_reward_avg, self.current_time)
         torch.save(self.qnet.state_dict(), os.path.join(self.model_dir, filename))
 

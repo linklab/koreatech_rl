@@ -20,7 +20,7 @@ class Dummy_Agent:
         return action_id
 
 
-def main() -> None:
+def main():
     print("START RUN!!!")
     agent = Dummy_Agent()
     observation, info = env.reset()

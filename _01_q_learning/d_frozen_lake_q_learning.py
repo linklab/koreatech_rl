@@ -19,12 +19,7 @@ class QTableAgent:
             self, env, config, use_wandb
     ):
         self.env = env
-        self.num_episodes = config["num_episodes"]
-        self.validation_time_steps_interval = config["validation_time_steps_interval"]
-        self.validation_num_episodes = config["validation_num_episodes"]
-        self.alpha = config["alpha"]
-        self.gamma = config["gamma"]
-        self.epsilon = config["epsilon"]
+        self.config = config
         self.use_wandb = use_wandb
         self.time_steps = 0
 
@@ -44,7 +39,7 @@ class QTableAgent:
 
     def epsilon_greedy_action(self, observation: np.ndarray) -> int:
         action_values = self.q_table[observation, :]
-        if np.random.rand() < self.epsilon:
+        if np.random.rand() < self.config["epsilon"]:
             action = random.choice(range(len(action_values)))
         else:
             max_value = np.max(action_values)
@@ -58,7 +53,7 @@ class QTableAgent:
         training_time_steps = time_steps = 0
         is_train_success = False
 
-        for episode in range(self.num_episodes):
+        for episode in range(self.config["num_episodes"]):
             episode_reward = 0.0
             episode_td_error = 0.0
 
@@ -78,9 +73,9 @@ class QTableAgent:
                 episode_reward += reward
 
                 # Q-Learning
-                td_error = reward + self.gamma * np.max(self.q_table[next_observation, :]) - self.q_table[observation, action]
+                td_error = reward + self.config["gamma"] * np.max(self.q_table[next_observation, :]) - self.q_table[observation, action]
 
-                self.q_table[observation, action] = self.q_table[observation, action] + self.alpha * td_error
+                self.q_table[observation, action] = self.q_table[observation, action] + self.config["alpha"] * td_error
                 episode_td_error += td_error
 
                 training_time_steps += 1  # Q-table 업데이트 횟수
@@ -90,11 +85,11 @@ class QTableAgent:
 
                 done = terminated or truncated
 
-                if self.time_steps % self.validation_time_steps_interval == 0:
+                if self.time_steps % self.config["validation_time_steps_interval"] == 0:
                     episode_reward_list_validation, avg_episode_reward_validation = self.validate()
                     print(
                         "[VALIDATION RESULTS: {0} Episodes, Episode Reward List: {1}] Episode Reward Mean: {2:.3f}".format(
-                            self.validation_num_episodes,
+                            self.config["validation_num_episodes"],
                             episode_reward_list_validation,
                             avg_episode_reward_validation
                         )
@@ -104,15 +99,16 @@ class QTableAgent:
                         is_train_success = True
                         break
 
-            print(
-                "[EPISODE: {0:>2}, Time Steps {1:6,}]".format(
-                    episode + 1, self.time_steps
-                ),
-                "Episode Steps: {0:>2}, Visited States Length: {1:>2}, Episode Reward: {2}".format(
-                    episode_step, len(visited_states), episode_reward
-                ),
-                "GOAL" if done and observation == 15 else "",
-            )
+            if not is_train_success:
+                print(
+                    "[EPISODE: {0:>2}, Time Steps {1:6,}]".format(
+                        episode + 1, self.time_steps
+                    ),
+                    "Episode Steps: {0:>2}, Visited States Length: {1:>2}, Episode Reward: {2}".format(
+                        episode_step, len(visited_states), episode_reward
+                    ),
+                    "GOAL" if done and observation == 15 else "",
+                )
 
             if self.use_wandb:
                 wandb.log({
@@ -131,11 +127,11 @@ class QTableAgent:
         return episode_reward_list, episode_td_error_list, is_train_success
 
     def validate(self):
-        episode_reward_lst = np.zeros(shape=(self.validation_num_episodes,), dtype=float)
+        episode_reward_lst = np.zeros(shape=(self.config["validation_num_episodes"],), dtype=float)
 
         test_env = gym.make("FrozenLake-v1", desc=DESC, map_name=MAP_NAME, is_slippery=IS_SLIPPERY)
 
-        for episode in range(self.validation_num_episodes):
+        for episode in range(self.config["validation_num_episodes"]):
             episode_reward = 0  # cumulative_reward
             episode_step = 1
 
@@ -157,7 +153,7 @@ class QTableAgent:
 def main():
     config = {
         "num_episodes": 200,
-        "validation_time_steps_interval": 10,
+        "validation_time_steps_interval": 30,
         "validation_num_episodes": 10,
         "alpha": 0.1,
         "gamma": 0.95,
@@ -189,7 +185,7 @@ def main():
         print("NO PLAYING!!!")
 
 
-def q_learning_test(q_table_agent: QTableAgent) -> None:
+def q_learning_test(q_table_agent: QTableAgent):
     play_env = gym.make("FrozenLake-v1", desc=DESC, map_name=MAP_NAME, is_slippery=IS_SLIPPERY, render_mode="human")
     observation, _ = play_env.reset()
     time.sleep(1)

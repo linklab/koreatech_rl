@@ -11,7 +11,7 @@ env = gym.make("FrozenLake-v1", desc=None, map_name="4x4", is_slippery=False, re
 ACTION_STRING_LIST = [" LEFT", " DOWN", "RIGHT", "   UP"]
 
 
-def env_info_details() -> None:
+def env_info_details():
     #####################
     # observation space #
     #####################
