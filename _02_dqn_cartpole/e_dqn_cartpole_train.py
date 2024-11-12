@@ -3,8 +3,8 @@ import gymnasium as gym
 import torch
 import os
 
-from _01_Q_LEARNING_AND_DQN._02_dqn_cartpole.c_qnet import QNet
-from _01_Q_LEARNING_AND_DQN._02_dqn_cartpole.d_dqn_train_test import DqnTrainer
+from _02_dqn_cartpole.c_qnet import QNet
+from _02_dqn_cartpole.d_dqn_train_test import DqnTrainer
 
 CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
 
