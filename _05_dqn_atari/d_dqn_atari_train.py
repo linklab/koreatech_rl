@@ -5,7 +5,7 @@ import ale_py
 from c_qnet import QNetCNN
 import os
 
-from _02_dqn_cartpole.d_dqn_train_test import DqnTrainer
+from _03_dqn_cartpole.d_dqn_train_test import DqnTrainer
 
 gym.register_envs(ale_py)
 

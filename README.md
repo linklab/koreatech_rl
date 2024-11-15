@@ -9,3 +9,5 @@
 
 # 패키지 설치
 pip install torch
+pip install gymnasium
+pip install gymnasium[toy-text]
