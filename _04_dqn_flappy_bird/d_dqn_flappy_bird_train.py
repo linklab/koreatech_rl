@@ -5,7 +5,7 @@ import flappy_bird_gymnasium
 from c_qnet import QNet
 import os
 
-from _01_Q_LEARNING_AND_DQN._02_dqn_cartpole.d_dqn_train_test import DqnTrainer
+from _03_dqn_cartpole.d_dqn_train_test import DqnTrainer
 
 CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
 

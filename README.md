@@ -9,3 +9,9 @@
 
 # 패키지 설치
 pip install torch
+pip install wandb
+pip install gymnasium
+pip install gymnasium[toy-text]
+pip install gymnasium[other]
+pip install flappy-bird-gymnasium
+pip install ale-py
