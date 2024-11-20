@@ -15,3 +15,4 @@ pip install gymnasium[toy-text]
 pip install gymnasium[other]
 pip install flappy-bird-gymnasium
 pip install ale-py
+

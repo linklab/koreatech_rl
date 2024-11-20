@@ -5,7 +5,7 @@ import gymnasium as gym
 import ale_py
 from c_qnet import QNetCNN
 
-from _02_dqn_cartpole.d_dqn_train_test import DqnTester
+from _03_dqn_cartpole.d_dqn_train_test import DqnTester
 
 CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
 
